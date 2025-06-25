@@ -3,7 +3,7 @@ import time
 import os
 
 
-def Conv1D(data: list, kernel: list, stride: int = 1):
+def Conv1D(data: list, kernel: list, stride: int = 1, padding: int = 0, fill: int = 0):
     if len(kernel) > len(data):
         raise ValueError("len(kernel) is larger than len(data)")
     
@@ -12,6 +12,8 @@ def Conv1D(data: list, kernel: list, stride: int = 1):
     
     if stride < 1: 
         raise ValueError("stride must be non-zero and pozitive")
+    
+    data = [fill for i in range(padding)] + data + [fill for i in range(padding)]
     
     kernel_len = len(kernel)
     max_index = len(data) - kernel_len + 1
@@ -25,6 +27,6 @@ def Conv1D(data: list, kernel: list, stride: int = 1):
 
 if __name__ == "__main__":
     kernel = [2,2,2]
-    for i in range(1, 15):
-        m = [1 for _ in range(10)]
-        pprint(Conv1D(m, kernel, i))
+    
+    m = [1 for _ in range(10)]
+    pprint(Conv1D(m, kernel, 2, padding=2, fill=3))
