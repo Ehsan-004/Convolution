@@ -14,16 +14,20 @@ def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int =
     kl = len(kernel)
     kr = len(kernel[0])
     
-    feature_map_l = floor((l - kl + 2 * padding) / stride) + 1
-    feature_map_r = floor((l - kr + 2 * padding) / stride) + 1
-            
-    max_line = l - kl + 1
-    max_row = r - kr + 1
+    lines = floor((l - kl + 2 * padding) / stride) + 1
+    rows = floor((r - kr + 2 * padding) / stride) + 1
     
-    feature_map = [[[] for __ in range(max_row)] for _ in range(max_line)]
+    print(f"lines: {lines} | rows: {rows}")
     
-    for i in range(0, max_line):  # i corresponds to line
-        for j in range(max_row):  # j corresponds to row
+    feature_map = [[[] for __ in range(rows)] for _ in range(lines)]
+    
+    print(feature_map)    
+    
+    print(f"i range: {list(range(0, lines, stride))}")
+    print(f"j range: {list(range(0, rows, stride))}")
+    
+    for i in range(0, lines):  # i corresponds to line
+        for j in range(0, rows):  # j corresponds to row
             sum_ = 0
             for m in range(kl):
                 for n in range(kr):
@@ -43,7 +47,10 @@ if __name__ == "__main__":
          [2,2,2,2],
          [1,1,1,1],
          ]
+    os.system("cls")
     pprint(m)
     time.sleep(1)
     os.system("cls")
-    pprint(Conv2D(m, kernel))
+    r = Conv2D(m, kernel, 2)
+    pprint(r[0])
+    pprint(r[1])
