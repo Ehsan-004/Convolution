@@ -2,45 +2,66 @@ from pprint import pprint
 import time
 import os
 from math import floor
+import copy
 
 
 def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int = 0, fill: int = 0):
+    data_c = copy.deepcopy(data)
     
-    l = len(data)
-    r = len(data[0])
+    original_l = len(data_c)
+    original_r = len(data_c[0])
+    
     kl = len(kernel)
     kr = len(kernel[0])
     
+    # adding padding if padding
     if padding < 0:
         raise ValueError(f"padding cannot be smaller than 0 but got {padding}")
     elif padding > 0:
-        for i in range(0, l):
-            for _ in range(padding):
-                data[i].append(fill)
         
+        padded_l = original_l + 2 * padding
+        padded_r = original_r + 2 * padding
+        
+        for li in data_c:
+            p = [padding * fill for _ in range(padding)]
+            for f in reversed(p):
+                li.insert(0, f)
+            for f in p:
+                li.append(f)
+
+            
         for _ in range(padding):
-            data.append([fill for __ in range(r + padding)])
+            data_c.insert(0, [fill for _ in range(padded_r)])
+            data_c.append([fill for _ in range(padded_r)])
         
-    l = len(data)
-    r = len(data[0])
+    orig_l = len(data_c)
+    orig_r = len(data_c[0])
     
+    fmap_lines = floor((original_l - kl + 2 * padding) / stride) + 1
+    fmap_rows = floor((original_r - kr + 2 * padding) / stride) + 1
     
-    lines = floor((l - kl + 2 * padding) / stride) + 1
-    rows = floor((r - kr + 2 * padding) / stride) + 1
-    
-    feature_map = [[[] for __ in range(rows)] for _ in range(lines)]
+    feature_map = [[0 for __ in range(fmap_rows)] for _ in range(fmap_lines)]
         
-    for i in range(0, lines):  # i corresponds to line
-        for j in range(0, rows):  # j corresponds to row
+    
+    
+    # print("orig_l - kl + 1 = ", orig_l - kl + 1)
+    # print("original_r - kr + 1 = ", )
+    for i in range(0, orig_l - kl + 1, stride):  # i corresponds to line
+        for j in range(0, orig_r - kr + 1, stride):  # j corresponds to row
             sum_ = 0
             for m in range(kl):
                 for n in range(kr):
-                    tmp = data[i+m][j+n] * kernel[m][n]
-                    data[i+m][j+n] = tmp
+                    tmp = data_c[i+m][j+n] * kernel[m][n]
+                    data_c[i+m][j+n] = tmp
                     sum_ += tmp
-            feature_map[i][j] = sum_
-                    
-    return data, feature_map
+            # uncomment this part to see what happens!
+            # pprint(data_c)
+            # time.sleep(1)
+            # os.system("cls")
+            
+            feature_map[i//stride][j//stride] = sum_
+                
+    return data_c, feature_map
 
 
 if __name__ == "__main__":
@@ -58,4 +79,4 @@ if __name__ == "__main__":
     r = Conv2D(m, kernel, 2, padding=2, fill=0)
     
     pprint(r[0])
-    pprint(r[1])
+    # pprint(r[1])
