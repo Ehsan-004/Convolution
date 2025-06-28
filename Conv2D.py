@@ -6,10 +6,9 @@ import copy
 
 
 def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int = 0, fill: int = 0):
-    data_c = copy.deepcopy(data)
     
-    original_l = len(data_c)
-    original_r = len(data_c[0])
+    original_l = len(data)
+    original_r = len(data[0])
     
     kl = len(kernel)
     kr = len(kernel[0])
@@ -22,7 +21,7 @@ def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int =
         padded_l = original_l + 2 * padding
         padded_r = original_r + 2 * padding
         
-        for li in data_c:
+        for li in data:
             p = [padding * fill for _ in range(padding)]
             for f in reversed(p):
                 li.insert(0, f)
@@ -31,11 +30,11 @@ def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int =
 
             
         for _ in range(padding):
-            data_c.insert(0, [fill for _ in range(padded_r)])
-            data_c.append([fill for _ in range(padded_r)])
+            data.insert(0, [fill for _ in range(padded_r)])
+            data.append([fill for _ in range(padded_r)])
         
-    orig_l = len(data_c)
-    orig_r = len(data_c[0])
+    orig_l = len(data)
+    orig_r = len(data[0])
     
     fmap_lines = floor((original_l - kl + 2 * padding) / stride) + 1
     fmap_rows = floor((original_r - kr + 2 * padding) / stride) + 1
@@ -51,9 +50,7 @@ def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int =
             sum_ = 0
             for m in range(kl):
                 for n in range(kr):
-                    tmp = data_c[i+m][j+n] * kernel[m][n]
-                    data_c[i+m][j+n] = tmp
-                    sum_ += tmp
+                    sum_ += data[i+m][j+n] * kernel[m][n]
             # uncomment this part to see what happens!
             # pprint(data_c)
             # time.sleep(1)
@@ -61,7 +58,7 @@ def Conv2D(data: list[list], kernel: list[list], stride: int = 1, padding: int =
             
             feature_map[i//stride][j//stride] = sum_
                 
-    return data_c, feature_map
+    return feature_map
 
 
 if __name__ == "__main__":
@@ -76,7 +73,8 @@ if __name__ == "__main__":
     pprint(m)
     time.sleep(1)
     os.system("cls")
-    r = Conv2D(m, kernel, 2, padding=2, fill=0)
+    # r = Conv2D(m, kernel, 2, padding=2, fill=0)
+    r = Conv2D(m, kernel, 1, padding=2, fill=0)
     
-    pprint(r[0])
+    pprint(r)
     # pprint(r[1])
