@@ -15,13 +15,13 @@ if __name__ == "__main__":
         show_images=False
     )
     
-    # Convolution2D(
-    #     image_path="images/test2.jpg",
-    #     kernel=kernels["emboss"],
-    #     stride=1,
-    #     padding=1,
-    #     fill=0,
-    #     save=True,
-    #     save_path="images/test2_output.jpg",
-    #     show_images=False
-    # )
+    Convolution2D(
+        image_path="images/test2.jpg",
+        kernel=kernels["emboss"],
+        stride=1,
+        padding=1,
+        fill=0,
+        save=True,
+        save_path="images/test2_output.jpg",
+        show_images=False
+    )
