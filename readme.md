@@ -1,4 +1,4 @@
-# Convolution Kernel
+# Convolution
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/Ehsan-004/TinyUrler)
 [![License](https://img.shields.io/badge/License-OpenSource-green)](https://github.com/Ehsan-004/TinyUrler/blob/main/LICENSE)
@@ -16,6 +16,7 @@ emboss kernel effect:
 </br>
 
 a visual test to see how it works. you can uncomment line 54 in: [Conv2D.py](Conv2D.py)
+(I don't know how to embad a video 😣)
 
 [![video](images/shot.png)](images/vid.mp4)
 
@@ -49,8 +50,8 @@ To set up, follow the installation instructions:
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/Ehsan-004/ConvolutionKernel
-    cd ConvolutionKernel
+    git clone https://github.com/Ehsan-004/Convolution
+    cd Convolution
     ```
 
 2.  **Create a virtual environment:**
