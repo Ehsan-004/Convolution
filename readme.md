@@ -28,6 +28,18 @@ This is a from-scratch implemention of 1D and 2D convolution.<br>
 
 Read more about convolution on WikiPedia: [WikiPedia](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://en.wikipedia.org/wiki/Convolution&ved=2ahUKEwjglMvhnJWOAxUDgP0HHUWPM1sQFnoECCYQAQ&usg=AOvVaw1cIbxRASR3i2RHCUrII3eD)
 
+</br>
+
+New Length and Height of image after convolution come from this formula:
+![](images/form.jpg)
+
+Or simply see this table:
+
+| Stride | Padding | Kernel |
+|---|---|---|
+| 1 | 1 | 3 * 3 |
+| 1 | 2 | 5 * 5 |
+| 1 | 3 | 7 * 7 |
 
 ## ⚙️ Installation
 
