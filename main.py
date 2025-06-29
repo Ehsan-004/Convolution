@@ -3,6 +3,7 @@ from Conv2D import Conv2D
 from multiprocessing import Pool
 import cv2
 from kernels import kernels
+from Pooling import MaxPool2D, MinPool2D, AvgPool2D
 
 
 def Convolution2D(image_path, kernel, stride=1, padding=0, fill=0,
@@ -79,6 +80,76 @@ def Convolution2D(image_path, kernel, stride=1, padding=0, fill=0,
     
     if save:
         cv2.imwrite(save_path, merged_image)
+
+
+
+def Pooling2D(image_path, kernel_size=(2, 2), method="max", stride=1, padding=0, fill=0,
+              save=False, save_path="pooled_image.png", show_images=True, resize_fx=0.5, resize_fy=0.5, print_log=True):
+    
+    img = cv2.imread(image_path)
+    if img is None:
+        raise FileNotFoundError(f"No image found at: {image_path}")
+
+    img = cv2.resize(img, (0, 0), fx=resize_fx, fy=resize_fy, interpolation=cv2.INTER_AREA)
+    b_channel, g_channel, r_channel = cv2.split(img)
+
+    if print_log:
+        print(f"blue channel: {b_channel.shape}")
+        print(f"green channel: {g_channel.shape}")
+        print(f"red channel: {r_channel.shape}")
+
+    lists = [a.tolist() for a in [b_channel, g_channel, r_channel]]
+
+    args = [(l, kernel_size, stride, padding, fill) for l in lists]
+
+    if print_log:
+        print("Starting Pooling...")
+
+    if method == "max":
+        with Pool(4) as p:
+            results = p.starmap(MaxPool2D, args)
+    elif method == "ming":
+        with Pool(4) as p:
+            results = p.starmap(MinPool2D, args)
+    elif method == "avg":
+        with Pool(4) as p:
+            results = p.starmap(AvgPool2D, args)
+    
+    
+
+    if print_log:
+        for idx, channel_name in enumerate(["Blue", "Green", "Red"]):
+            arr = np.array(results[idx])
+            print(f"\n--- {channel_name} channel pooled output ---")
+            print(f"  min: {np.min(arr)}, max: {np.max(arr)}, mean: {np.mean(arr)}")
+            print(f"  Sample 5x5:\n{arr[:5, :5]}")
+
+    result = []
+    epsilon = 1e-5
+    for x in results:
+        arr = np.array(x, dtype=np.float32)
+        min_val, max_val = arr.min(), arr.max()
+
+        if abs(max_val - min_val) < epsilon:
+            norm = np.zeros_like(arr, dtype=np.uint8)
+        else:
+            norm = ((arr - min_val) / (max_val - min_val) * 255).astype(np.uint8)
+
+        result.append(norm)
+
+    _b_channel, _g_channel, _r_channel = result
+    merged_image = cv2.merge([_b_channel, _g_channel, _r_channel])
+
+    if show_images:
+        cv2.imshow("Original Image", img)
+        cv2.imshow(f"Pooled Image ({method})", merged_image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+    if save:
+        cv2.imwrite(save_path, merged_image)
+
+
 
     
 if __name__ == "__main__":
